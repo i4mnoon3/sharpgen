@@ -24,6 +24,7 @@ namespace SharpGenerator.Services
                 d.AddTables(tableRepository.FindByDatabase(name));
                 foreach (var t in d.Tables) {
                     t.Columns = columnRepository.FindByTable(t.Name, name);
+                    t.AddKey(columnRepository.ReadPrimaryKey(t.Name));
                 }
             }
             return d;

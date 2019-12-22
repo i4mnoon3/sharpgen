@@ -33,6 +33,7 @@ namespace SharpGenerator.Models
     {
         public string Name { get; set; }
         public List<Column> Columns { get; set; }
+        public List<Column> Keys { get; set; }
         public Database Database { get; set; }
         
         public Table() : this("")
@@ -43,6 +44,19 @@ namespace SharpGenerator.Models
         {
             this.Name = name;
             Columns = new List<Column>();
+            Keys = new List<Column>();
+        }
+        
+        public void AddKey(string name, string type)
+        {
+            AddKey(new Column(name, type));
+        }
+        
+        public void AddKey(Column key)
+        {
+            if (key != null) {
+                Keys.Add(key);
+            }
         }
         
         public void AddColumn(string name, string type, bool notNull, bool primaryKey, bool autoIncrement)
@@ -71,18 +85,18 @@ namespace SharpGenerator.Models
             return c;
         }
         
-        public string GetPropertyType(string type)
+        string GetPropertyType(string type)
         {
             switch (type.ToLower()) {
                 case "int":
-                case "integer": return "int";
-                case "double": return "double";
-                case "decimal": return "decimal";
-                case "float": return "float";
-                case "date": 
+                    case "integer": return "int";
+                    case "double": return "double";
+                    case "decimal": return "decimal";
+                    case "float": return "float";
+                case "date":
                 case "datetime":
                     return "DateTime";
-                default: return "string";
+                    default: return "string";
             }
         }
     }
