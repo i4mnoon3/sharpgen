@@ -17,8 +17,8 @@ namespace SharpGenerator
         
         public void Run(string[] args)
         {
-            if (args.Length == 2) {
-                string connectionString = args[1];
+            if (args.Length == 1) {
+                string connectionString = args[0];
                 
                 var connection = new SqlConnection(connectionString);
                 
@@ -46,7 +46,7 @@ namespace SharpGenerator
             }
         }
         
-        public void ShowHelp()
+        void ShowHelp()
         {
             Console.WriteLine();
             Console.WriteLine(@"Usage: .\sgen.exe g ''");
