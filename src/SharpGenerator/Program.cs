@@ -39,7 +39,7 @@ namespace SharpGenerator
                     var c = t.ToClass();
                     SaveFile(Path.Combine("Models", c.Name + ".cs"), c.ToString());
                     SaveFile(Path.Combine("Repositories", "I" + c.Name + "Repository.cs"), c.ToRepositoryInterfaceString());
-                    SaveFile(Path.Combine(Path.Combine("Repositories", "Sql"), "Sql" + c.Name + "Repository.cs"), c.ToSqlRepositoryClassString());
+                    SaveFile(Path.Combine(Path.Combine("Repositories", "Sql"), "Sql" + c.Name + "Repository.cs"), t.ToSqlRepositoryClassString());
                 }
             } else {
                 ShowHelp();
@@ -49,7 +49,7 @@ namespace SharpGenerator
         void ShowHelp()
         {
             Console.WriteLine();
-            Console.WriteLine(@"Usage: .\sgen.exe g ''");
+            Console.WriteLine(@"Usage: .\sgen.exe CONNECTION_STRING");
         }
         
         void SaveFile(string fileName, string content)

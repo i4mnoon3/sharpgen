@@ -22,6 +22,16 @@ namespace __NAMESPACE__.Repositories.Sql
         {{
         }}
         
+        protected decimal GetDecimal(SqlDataReader rs, int index)
+        {{
+            return GetDecimal(rs, index, 0);
+        }}
+        
+        protected decimal GetDecimal(SqlDataReader rs, int index, decimal @default)
+        {{
+            return !rs.IsDBNull(index) ? rs.GetDecimal(index) : @default;
+        }}
+        
         protected DateTime GetDateTime(SqlDataReader rs, int index)
         {{
             return GetDateTime(rs, index, DateTime.Now);
@@ -89,7 +99,7 @@ namespace __NAMESPACE__.Repositories.Sql
             return s;
         }
         
-        public static string ToSqlRepositoryClassString(this Class c)
+        public static string ToSqlRepositoryClassString(this Table t)
         {
             string s = string.Format(@"using System;
 using System.Collections.Generic;
@@ -124,7 +134,7 @@ __PROP_VALS__
             string query = @""
 SELECT __COLS__
 FROM __TABLE__
-WHERE __KEYS__"";
+WHERE __KEY_AND_VALS__"";
             __NAME__ __VAR__ = null;
             using (var rs = ExecuteReader(query)) {{
                 if (rs.Read()) {{
@@ -148,7 +158,7 @@ VALUES(__COL_VALS__)"";
             string query = @""
 UPDATE __TABLE__ SET
 __COL_AND_VALS__
-WHERE __KEYS__"";
+WHERE __KEY_AND_VALS__"";
             ExecuteNonQuery(query);
         }}
         
@@ -156,11 +166,12 @@ WHERE __KEYS__"";
         {{
             string query = @""
 DELETE FROM __TABLE__
-WHERE __KEYS__"";
+WHERE __KEY_AND_VALS__"";
             ExecuteNonQuery(query);
         }}
     }}
 }}");
+            Class c = t.ToClass();
             s = s.Replace("__NAMESPACE__", c.Namespace);
             s = s.Replace("__NAME__", c.Name);
             s = s.Replace("__VAR__", c.Name.ToCamelCase());
@@ -171,16 +182,25 @@ WHERE __KEYS__"";
             string colAndVals = "";
             int i = 0;
             foreach (var p in c.Properties) {
+                if (i > 0) {
+                    propVals +=  Environment.NewLine;
+                    colAndVals += ", " + Environment.NewLine;
+                }
                 cols += p.Name + ", ";
                 colVals += "@" + p.Name + ", ";
-                propVals += "                    " + c.Name.ToCamelCase() + "." + p.Name + " = " + GetDbType(p.Type, i) + ";" + Environment.NewLine;
-                colAndVals += "    " + p.Name + " = @" + p.Name + ", " + Environment.NewLine;
+                propVals += "                    " + c.Name.ToCamelCase() + "." + p.Name + " = " + GetDbType(p.Type, i) + ";";
+                colAndVals += "    " + p.Name + " = @" + p.Name;
                 i++;
+            }
+            string keyAndVals = "";
+            foreach (var col in t.Keys) {
+                keyAndVals += col.Name.ToPascalCase() + " = @" + col.Name.ToPascalCase() + ", ";
             }
             s = s.Replace("__COLS__", cols.Trim().Trim(','));
             s = s.Replace("__COL_VALS__", colVals.Trim().Trim(','));
             s = s.Replace("__PROP_VALS__", propVals);
             s = s.Replace("__COL_AND_VALS__", colAndVals.Trim(','));
+            s = s.Replace("__KEY_AND_VALS__", keyAndVals.Trim().Trim(','));
             return s;
         }
         

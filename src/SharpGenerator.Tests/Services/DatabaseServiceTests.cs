@@ -33,7 +33,7 @@ namespace SharpGenerator.Tests.Services
             var d = s.GetDatabase("healthwatch");
             foreach (var t in d.Tables) {
                 Console.WriteLine(t.ToClass().ToRepositoryInterfaceString());
-                Console.WriteLine(t.ToClass().ToSqlRepositoryClassString());
+                Console.WriteLine(t.ToSqlRepositoryClassString());
             }
         }
     }

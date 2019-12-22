@@ -26,5 +26,25 @@ and table_catalog = @table_catalog";
             }
             return columns;
         }
+        
+        public Column ReadPrimaryKey(string tableName)
+        {
+            string query = @"
+select col.column_name from 
+    information_schema.table_constraints tab, 
+    information_schema.constraint_column_usage col 
+where 
+    col.constraint_name = tab.constraint_name
+    and col.table_name = tab.table_name
+    and constraint_type = 'PRIMARY KEY'
+    and col.table_name = @table_name";
+            Column column = null;
+            using (var rs = ExecuteReader(query, new SqlParameter("@table_name", tableName))) {
+                while (rs.Read()) {
+                    column = new Column(GetString(rs, 0));
+                }
+            }
+            return column;
+        }
     }
 }
