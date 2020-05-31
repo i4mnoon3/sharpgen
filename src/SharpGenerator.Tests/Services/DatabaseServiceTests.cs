@@ -12,7 +12,7 @@ namespace SharpGenerator.Tests.Services
     [TestFixture]
     public class DatabaseServiceTests
     {
-        string connectionString = ConfigurationManager.AppSettings["healthWatchConnection"];
+        string connectionString = ConfigurationManager.AppSettings["testConnection"];
         SqlConnection connection;
         
         [SetUpAttribute]
@@ -24,13 +24,12 @@ namespace SharpGenerator.Tests.Services
         [Test]
         public void TestGetDatabase()
         {
-            
             IDatabaseRepository databaseRepo = new SqlDatabaseRepository(connection);
             ITableRepository tableRepo = new SqlTableRepository(connection);
             IColumnRepository columnRepo = new SqlColumnRepository(connection);
             var s = new DatabaseService(databaseRepo, tableRepo, columnRepo);
             
-            var d = s.GetDatabase("healthwatch");
+            var d = s.GetDatabase("test");
             foreach (var t in d.Tables) {
                 Console.WriteLine(t.ToClass().ToRepositoryInterfaceString());
                 Console.WriteLine(t.ToSqlRepositoryClassString());

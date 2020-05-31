@@ -9,7 +9,7 @@ namespace SharpGenerator.Tests.Repositories
     [TestFixture]
     public class ColumnRepositoryTests
     {
-        string connectionString = ConfigurationManager.AppSettings["eFormConnection"];
+        string connectionString = ConfigurationManager.AppSettings["testConnection"];
         SqlConnection connection;
         
         [SetUpAttribute]
@@ -21,7 +21,7 @@ namespace SharpGenerator.Tests.Repositories
         [Test]
         public void TestFindByTable()
         {
-            var columns = new SqlColumnRepository(connection).FindByTable("Answer", "eForm");
+            var columns = new SqlColumnRepository(connection).FindByTable("User", "test");
             foreach (var c in columns) {
                 Console.WriteLine(c.Name);
             }

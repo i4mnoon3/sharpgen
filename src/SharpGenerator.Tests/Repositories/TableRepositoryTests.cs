@@ -9,7 +9,7 @@ namespace SharpGenerator.Tests.Repositories
     [TestFixture]
     public class TableRepositoryTests
     {
-        string connectionString = ConfigurationManager.AppSettings["healthWatchConnection"];
+        string connectionString = ConfigurationManager.AppSettings["testConnection"];
         SqlConnection connection;
         
         [SetUpAttribute]
@@ -22,7 +22,7 @@ namespace SharpGenerator.Tests.Repositories
         public void TestFindByDatabase()
         {
             
-            var tables = new SqlTableRepository(connection).FindByDatabase("healthWatch");
+            var tables = new SqlTableRepository(connection).FindByDatabase("test");
             foreach (var t in tables) {
                 Console.WriteLine(t.Name);
             }
@@ -31,8 +31,8 @@ namespace SharpGenerator.Tests.Repositories
         [Test]
         public void TestRead()
         {
-            string connectionString = ConfigurationManager.AppSettings["healthWatchConnection"];
-            var table = new SqlTableRepository(connection).Read("Wise", "healthWatch");
+            string connectionString = ConfigurationManager.AppSettings["testConnection"];
+            var table = new SqlTableRepository(connection).Read("User", "test");
             Console.WriteLine(table.Name);
         }
     }

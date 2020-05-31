@@ -23,7 +23,7 @@ namespace SharpGenerator.Tests
         [Test]
         public void TestRun()
         {
-            p.Run(new string[] { "Server=.\\sqlexpress;Database=healthwatch;Trusted_Connection=True;" });
+            p.Run(new string[] { "Server=.\\sqlexpress;Database=test;Trusted_Connection=True;" });
         }
     }
 }
